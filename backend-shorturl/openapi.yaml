@@ -7,7 +7,31 @@ info:
     description: The greeting service definition.
     version: 0.0.1
 paths:
-    /shorturl/{name}:
+    /api/shorten:
+        post:
+            tags:
+                - Public
+            operationId: Public_CreateShortUrl
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ShortenRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ShortenReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/shorturl/{name}:
         get:
             tags:
                 - Public
@@ -34,6 +58,19 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
+        Data:
+            type: object
+            properties:
+                shortCode:
+                    type: string
+                shortUrl:
+                    type: string
+                longUrl:
+                    type: string
+                createAt:
+                    type: string
+                expireTime:
+                    type: string
         GoogleProtobufAny:
             type: object
             properties:
@@ -48,6 +85,22 @@ components:
                 message:
                     type: string
             description: The response message containing the greetings
+        ShortenReply:
+            type: object
+            properties:
+                code:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/Data'
+                message:
+                    type: string
+        ShortenRequest:
+            type: object
+            properties:
+                longUrl:
+                    type: string
+                expireTime:
+                    type: string
         Status:
             type: object
             properties:

@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Public_SayHello_FullMethodName = "/shorturl.v1.Public/SayHello"
+	Public_SayHello_FullMethodName       = "/shorturl.v1.Public/SayHello"
+	Public_CreateShortUrl_FullMethodName = "/shorturl.v1.Public/CreateShortUrl"
 )
 
 // PublicClient is the client API for Public service.
@@ -30,6 +31,7 @@ const (
 type PublicClient interface {
 	// Sends a greeting
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+	CreateShortUrl(ctx context.Context, in *ShortenRequest, opts ...grpc.CallOption) (*ShortenReply, error)
 }
 
 type publicClient struct {
@@ -50,6 +52,16 @@ func (c *publicClient) SayHello(ctx context.Context, in *HelloRequest, opts ...g
 	return out, nil
 }
 
+func (c *publicClient) CreateShortUrl(ctx context.Context, in *ShortenRequest, opts ...grpc.CallOption) (*ShortenReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ShortenReply)
+	err := c.cc.Invoke(ctx, Public_CreateShortUrl_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PublicServer is the server API for Public service.
 // All implementations must embed UnimplementedPublicServer
 // for forward compatibility.
@@ -58,6 +70,7 @@ func (c *publicClient) SayHello(ctx context.Context, in *HelloRequest, opts ...g
 type PublicServer interface {
 	// Sends a greeting
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
+	CreateShortUrl(context.Context, *ShortenRequest) (*ShortenReply, error)
 	mustEmbedUnimplementedPublicServer()
 }
 
@@ -70,6 +83,9 @@ type UnimplementedPublicServer struct{}
 
 func (UnimplementedPublicServer) SayHello(context.Context, *HelloRequest) (*HelloReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+}
+func (UnimplementedPublicServer) CreateShortUrl(context.Context, *ShortenRequest) (*ShortenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateShortUrl not implemented")
 }
 func (UnimplementedPublicServer) mustEmbedUnimplementedPublicServer() {}
 func (UnimplementedPublicServer) testEmbeddedByValue()                {}
@@ -110,6 +126,24 @@ func _Public_SayHello_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Public_CreateShortUrl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ShortenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PublicServer).CreateShortUrl(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Public_CreateShortUrl_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PublicServer).CreateShortUrl(ctx, req.(*ShortenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Public_ServiceDesc is the grpc.ServiceDesc for Public service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -120,6 +154,10 @@ var Public_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SayHello",
 			Handler:    _Public_SayHello_Handler,
+		},
+		{
+			MethodName: "CreateShortUrl",
+			Handler:    _Public_CreateShortUrl_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

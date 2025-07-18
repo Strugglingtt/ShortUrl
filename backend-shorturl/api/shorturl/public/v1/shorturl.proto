@@ -11,9 +11,33 @@ service Public {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply) {
     option (google.api.http) = {
-      get: "/shorturl/{name}"
+      get: "/api/shorturl/{name}"
     };
   }
+  rpc CreateShortUrl (ShortenRequest) returns (ShortenReply){
+    option(google.api.http)={
+      post: "/api/shorten",
+      body:"*"
+    };
+  }
+}
+
+message ShortenRequest{
+  string long_url=1;
+  string expire_time =2 ;
+}
+
+message ShortenReply{
+  string code =1;
+  data data =2;
+  string message=3;
+}
+message data{
+   string short_code=1;
+   string short_url=2;
+   string long_url=3;
+   string create_at=4;
+   string expire_time=5;
 }
 
 // The request message containing the user's name.

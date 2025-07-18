@@ -14,29 +14,29 @@ type greeterRepo struct {
 }
 
 // NewGreeterRepo .
-func NewGreeterRepo(data *Data, logger log.Logger) biz.GreeterRepo {
+func NewGreeterRepo(data *Data, logger log.Logger) biz.ShortUrlRepo {
 	return &greeterRepo{
 		data: data,
 		log:  log.NewHelper(logger),
 	}
 }
 
-func (r *greeterRepo) Save(ctx context.Context, g *biz.Greeter) (*biz.Greeter, error) {
+func (r *greeterRepo) Save(ctx context.Context, g *biz.ShortUrl) (*biz.ShortUrl, error) {
 	return g, nil
 }
 
-func (r *greeterRepo) Update(ctx context.Context, g *biz.Greeter) (*biz.Greeter, error) {
+func (r *greeterRepo) Update(ctx context.Context, g *biz.ShortUrl) (*biz.ShortUrl, error) {
 	return g, nil
 }
 
-func (r *greeterRepo) FindByID(context.Context, int64) (*biz.Greeter, error) {
+func (r *greeterRepo) FindByID(context.Context, int64) (*biz.ShortUrl, error) {
 	return nil, nil
 }
 
-func (r *greeterRepo) ListByHello(context.Context, string) ([]*biz.Greeter, error) {
+func (r *greeterRepo) ListByHello(context.Context, string) ([]*biz.ShortUrl, error) {
 	return nil, nil
 }
 
-func (r *greeterRepo) ListAll(context.Context) ([]*biz.Greeter, error) {
+func (r *greeterRepo) ListAll(context.Context) ([]*biz.ShortUrl, error) {
 	return nil, nil
 }
