@@ -8,12 +8,6 @@ option go_package = "backend-shorturl/api/shorturl/public/v1;v1";
 
 // The greeting service definition.
 service Public {
-  // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {
-    option (google.api.http) = {
-      get: "/api/shorturl/{name}"
-    };
-  }
   rpc CreateShortUrl (ShortenRequest) returns (ShortenReply){
     option(google.api.http)={
       post: "/api/shorten",
@@ -38,14 +32,4 @@ message data{
    string long_url=3;
    string create_at=4;
    string expire_time=5;
-}
-
-// The request message containing the user's name.
-message HelloRequest {
-  string name = 1;
-}
-
-// The response message containing the greetings
-message HelloReply {
-  string message = 1;
 }

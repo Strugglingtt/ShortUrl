@@ -7,7 +7,9 @@
 package main
 
 import (
+	"backend-shorturl/internal/biz"
 	"backend-shorturl/internal/conf"
+	"backend-shorturl/internal/data"
 	"backend-shorturl/internal/server"
 	"backend-shorturl/internal/service"
 	"github.com/go-kratos/kratos/v2"
@@ -21,11 +23,22 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, data *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	publicService := service.NewPublicService()
+func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
+	client, err := data.NewEntClient(confData, logger)
+	if err != nil {
+		return nil, nil, err
+	}
+	dataData, cleanup, err := data.NewData(logger, client)
+	if err != nil {
+		return nil, nil, err
+	}
+	shortUrlRepo := data.NewShortUrlRepo(dataData, logger)
+	shortUrlUsecase := biz.NewShortUrlUsecase(shortUrlRepo, logger)
+	publicService := service.NewPublicService(shortUrlUsecase, logger)
 	grpcServer := server.NewGRPCServer(confServer, publicService, logger)
 	httpServer := server.NewHTTPServer(confServer, publicService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
+		cleanup()
 	}, nil
 }

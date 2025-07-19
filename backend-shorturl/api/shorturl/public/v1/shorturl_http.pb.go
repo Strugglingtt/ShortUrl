@@ -20,40 +20,14 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationPublicCreateShortUrl = "/shorturl.v1.Public/CreateShortUrl"
-const OperationPublicSayHello = "/shorturl.v1.Public/SayHello"
 
 type PublicHTTPServer interface {
 	CreateShortUrl(context.Context, *ShortenRequest) (*ShortenReply, error)
-	// SayHello Sends a greeting
-	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
 }
 
 func RegisterPublicHTTPServer(s *http.Server, srv PublicHTTPServer) {
 	r := s.Route("/")
-	r.GET("/api/shorturl/{name}", _Public_SayHello0_HTTP_Handler(srv))
 	r.POST("/api/shorten", _Public_CreateShortUrl0_HTTP_Handler(srv))
-}
-
-func _Public_SayHello0_HTTP_Handler(srv PublicHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in HelloRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationPublicSayHello)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.SayHello(ctx, req.(*HelloRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*HelloReply)
-		return ctx.Result(200, reply)
-	}
 }
 
 func _Public_CreateShortUrl0_HTTP_Handler(srv PublicHTTPServer) func(ctx http.Context) error {
@@ -80,7 +54,6 @@ func _Public_CreateShortUrl0_HTTP_Handler(srv PublicHTTPServer) func(ctx http.Co
 
 type PublicHTTPClient interface {
 	CreateShortUrl(ctx context.Context, req *ShortenRequest, opts ...http.CallOption) (rsp *ShortenReply, err error)
-	SayHello(ctx context.Context, req *HelloRequest, opts ...http.CallOption) (rsp *HelloReply, err error)
 }
 
 type PublicHTTPClientImpl struct {
@@ -98,19 +71,6 @@ func (c *PublicHTTPClientImpl) CreateShortUrl(ctx context.Context, in *ShortenRe
 	opts = append(opts, http.Operation(OperationPublicCreateShortUrl))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *PublicHTTPClientImpl) SayHello(ctx context.Context, in *HelloRequest, opts ...http.CallOption) (*HelloReply, error) {
-	var out HelloReply
-	pattern := "/api/shorturl/{name}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationPublicSayHello))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

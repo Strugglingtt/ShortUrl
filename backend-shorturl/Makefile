@@ -55,6 +55,11 @@ generate:
 	go generate ./...
 	go mod tidy
 
+.PHONY: wire
+# wire
+wire:
+	cd ./cmd/backend-shorturl && wire
+
 .PHONY: all
 # generate all
 all:
