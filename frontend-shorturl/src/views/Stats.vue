@@ -14,7 +14,7 @@
 
       <el-divider />
 
-      <el-table :data="stats.logs" style="width: 100%">
+      <el-table :client="stats.logs" style="width: 100%">
         <el-table-column prop="time" label="时间" width="180" />
         <el-table-column prop="ip" label="IP地址" width="150" />
         <el-table-column prop="device" label="设备" />
@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  data() {
+  client() {
     return {
       stats: {
         total: 0,
@@ -35,8 +35,8 @@ export default {
     }
   },
   async created() {
-    const { data } = await this.$axios.get(`/api/stats/${this.$route.params.code}`)
-    this.stats = data
+    const { client } = await this.$axios.get(`/api/stats/${this.$route.params.code}`)
+    this.stats = client
   }
 }
 </script>   

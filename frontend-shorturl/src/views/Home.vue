@@ -35,7 +35,7 @@
 <script>
 import QRCode from 'qrcodejs2'
 export default {
-  data() {
+  client() {
     return {
       longUrl: '',
       shortUrl: '',
@@ -52,10 +52,10 @@ export default {
     async generateShortUrl() {
       this.loading = true
       try {
-        const { data } = await this.$axios.post('/api/shorten', {
+        const { client } = await this.$axios.post('/api/shorten', {
           url: this.longUrl
         })
-        this.shortUrl = data.shortUrl
+        this.shortUrl = client.shortUrl
         this.generateQRCode()
         this.fetchStats()
       } finally {
@@ -77,8 +77,8 @@ export default {
       this.$message.success('已复制到剪贴板')
     },
     async fetchStats() {
-      const { data } = await this.$axios.get(`/api/stats/${this.shortUrl}`)
-      this.stats = data
+      const { client } = await this.$axios.get(`/api/stats/${this.shortUrl}`)
+      this.stats = client
     }
   }
 }

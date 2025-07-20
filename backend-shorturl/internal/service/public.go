@@ -24,6 +24,7 @@ func (s *PublicService) CreateShortUrl(ctx context.Context, req *pb.ShortenReque
 	if req.LongUrl == "" {
 		return nil, status.Error(codes.InvalidArgument, "long url is required")
 	}
+
 	// 2. 解析过期时间
 	var expireTime time.Time
 	var err error
@@ -33,6 +34,7 @@ func (s *PublicService) CreateShortUrl(ctx context.Context, req *pb.ShortenReque
 			return nil, status.Error(codes.InvalidArgument, "invalid expire time format, should be RFC3339")
 		}
 	}
+
 	// 3. 调用biz层处理业务逻辑
 	reply, err := s.uc.CreateShortUrl(ctx, &biz.ShortUrl{
 		LongUrl:    req.LongUrl,
@@ -42,15 +44,17 @@ func (s *PublicService) CreateShortUrl(ctx context.Context, req *pb.ShortenReque
 		s.log.Errorf("CreateShortUrl error: %v", err)
 		return nil, status.Errorf(codes.Internal, "failed to create short url")
 	}
-	data := pb.ShortenReply{}.Data
-	data.ShortCode = reply.ShortCode
-	data.ShortUrl = reply.ShortUrl
-	data.CreateAt = reply.CreateTime
-	data.ExpireTime = reply.ExpireTime
+
 	// 4. 构造响应
 	return &pb.ShortenReply{
 		Code:    "200",
 		Message: "success",
-		Data:    data,
+		Data: &pb.Data{
+			ShortCode:  reply.ShortCode,
+			ShortUrl:   reply.ShortUrl,
+			LongUrl:    reply.LongUrl,
+			CreateAt:   reply.CreateTime,
+			ExpireTime: reply.ExpireTime,
+		},
 	}, nil
 }

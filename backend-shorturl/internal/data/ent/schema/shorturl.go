@@ -22,7 +22,7 @@ func (Shorturl) Fields() []ent.Field {
 			Immutable().
 			Annotations(
 				entsql.Annotation{
-					//Incremental: true, // 标记为自增
+					Incremental: nil, // 标记为自增
 				},
 			).
 			Comment("自增主键"),

@@ -23,10 +23,10 @@ message ShortenRequest{
 
 message ShortenReply{
   string code =1;
-  data data =2;
+  Data data =2;
   string message=3;
 }
-message data{
+message Data{
    string short_code=1;
    string short_url=2;
    string long_url=3;

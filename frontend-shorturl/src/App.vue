@@ -43,7 +43,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'App',
-  data() {
+  client() {
     return {
       loadingText: '加载中...',
       loadingStatus: null

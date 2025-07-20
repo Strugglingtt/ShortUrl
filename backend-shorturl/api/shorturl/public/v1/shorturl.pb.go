@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.31.1
-// source: api/shorturl/public/v1/shorturl.proto
+// source: shorturl/public/v1/shorturl.proto
 
 package v1
 
@@ -32,7 +32,7 @@ type ShortenRequest struct {
 
 func (x *ShortenRequest) Reset() {
 	*x = ShortenRequest{}
-	mi := &file_api_shorturl_public_v1_shorturl_proto_msgTypes[0]
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +44,7 @@ func (x *ShortenRequest) String() string {
 func (*ShortenRequest) ProtoMessage() {}
 
 func (x *ShortenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_shorturl_public_v1_shorturl_proto_msgTypes[0]
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +57,7 @@ func (x *ShortenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ShortenRequest.ProtoReflect.Descriptor instead.
 func (*ShortenRequest) Descriptor() ([]byte, []int) {
-	return file_api_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{0}
+	return file_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *ShortenRequest) GetLongUrl() string {
@@ -85,7 +85,7 @@ type ShortenReply struct {
 
 func (x *ShortenReply) Reset() {
 	*x = ShortenReply{}
-	mi := &file_api_shorturl_public_v1_shorturl_proto_msgTypes[1]
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -97,7 +97,7 @@ func (x *ShortenReply) String() string {
 func (*ShortenReply) ProtoMessage() {}
 
 func (x *ShortenReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_shorturl_public_v1_shorturl_proto_msgTypes[1]
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -110,7 +110,7 @@ func (x *ShortenReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ShortenReply.ProtoReflect.Descriptor instead.
 func (*ShortenReply) Descriptor() ([]byte, []int) {
-	return file_api_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{1}
+	return file_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ShortenReply) GetCode() string {
@@ -147,7 +147,7 @@ type Data struct {
 
 func (x *Data) Reset() {
 	*x = Data{}
-	mi := &file_api_shorturl_public_v1_shorturl_proto_msgTypes[2]
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -159,7 +159,7 @@ func (x *Data) String() string {
 func (*Data) ProtoMessage() {}
 
 func (x *Data) ProtoReflect() protoreflect.Message {
-	mi := &file_api_shorturl_public_v1_shorturl_proto_msgTypes[2]
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -172,7 +172,7 @@ func (x *Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Data.ProtoReflect.Descriptor instead.
 func (*Data) Descriptor() ([]byte, []int) {
-	return file_api_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{2}
+	return file_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Data) GetShortCode() string {
@@ -210,20 +210,20 @@ func (x *Data) GetExpireTime() string {
 	return ""
 }
 
-var File_api_shorturl_public_v1_shorturl_proto protoreflect.FileDescriptor
+var File_shorturl_public_v1_shorturl_proto protoreflect.FileDescriptor
 
-const file_api_shorturl_public_v1_shorturl_proto_rawDesc = "" +
+const file_shorturl_public_v1_shorturl_proto_rawDesc = "" +
 	"\n" +
-	"%api/shorturl/public/v1/shorturl.proto\x12\vshorturl.v1\x1a\x1cgoogle/api/annotations.proto\"L\n" +
+	"!shorturl/public/v1/shorturl.proto\x12\vshorturl.v1\x1a\x1cgoogle/api/annotations.proto\"L\n" +
 	"\x0eShortenRequest\x12\x19\n" +
 	"\blong_url\x18\x01 \x01(\tR\alongUrl\x12\x1f\n" +
 	"\vexpire_time\x18\x02 \x01(\tR\n" +
 	"expireTime\"c\n" +
 	"\fShortenReply\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12%\n" +
-	"\x04data\x18\x02 \x01(\v2\x11.shorturl.v1.dataR\x04data\x12\x18\n" +
+	"\x04data\x18\x02 \x01(\v2\x11.shorturl.v1.DataR\x04data\x12\x18\n" +
 	"\amessage\x18\x03 \x01(\tR\amessage\"\x9b\x01\n" +
-	"\x04data\x12\x1d\n" +
+	"\x04Data\x12\x1d\n" +
 	"\n" +
 	"short_code\x18\x01 \x01(\tR\tshortCode\x12\x1b\n" +
 	"\tshort_url\x18\x02 \x01(\tR\bshortUrl\x12\x19\n" +
@@ -235,25 +235,25 @@ const file_api_shorturl_public_v1_shorturl_proto_rawDesc = "" +
 	"\x0eCreateShortUrl\x12\x1b.shorturl.v1.ShortenRequest\x1a\x19.shorturl.v1.ShortenReply\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/shortenB,Z*backend-shorturl/api/shorturl/public/v1;v1b\x06proto3"
 
 var (
-	file_api_shorturl_public_v1_shorturl_proto_rawDescOnce sync.Once
-	file_api_shorturl_public_v1_shorturl_proto_rawDescData []byte
+	file_shorturl_public_v1_shorturl_proto_rawDescOnce sync.Once
+	file_shorturl_public_v1_shorturl_proto_rawDescData []byte
 )
 
-func file_api_shorturl_public_v1_shorturl_proto_rawDescGZIP() []byte {
-	file_api_shorturl_public_v1_shorturl_proto_rawDescOnce.Do(func() {
-		file_api_shorturl_public_v1_shorturl_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_api_shorturl_public_v1_shorturl_proto_rawDesc), len(file_api_shorturl_public_v1_shorturl_proto_rawDesc)))
+func file_shorturl_public_v1_shorturl_proto_rawDescGZIP() []byte {
+	file_shorturl_public_v1_shorturl_proto_rawDescOnce.Do(func() {
+		file_shorturl_public_v1_shorturl_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_shorturl_public_v1_shorturl_proto_rawDesc), len(file_shorturl_public_v1_shorturl_proto_rawDesc)))
 	})
-	return file_api_shorturl_public_v1_shorturl_proto_rawDescData
+	return file_shorturl_public_v1_shorturl_proto_rawDescData
 }
 
-var file_api_shorturl_public_v1_shorturl_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_api_shorturl_public_v1_shorturl_proto_goTypes = []any{
+var file_shorturl_public_v1_shorturl_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_shorturl_public_v1_shorturl_proto_goTypes = []any{
 	(*ShortenRequest)(nil), // 0: shorturl.v1.ShortenRequest
 	(*ShortenReply)(nil),   // 1: shorturl.v1.ShortenReply
-	(*Data)(nil),           // 2: shorturl.v1.data
+	(*Data)(nil),           // 2: shorturl.v1.Data
 }
-var file_api_shorturl_public_v1_shorturl_proto_depIdxs = []int32{
-	2, // 0: shorturl.v1.ShortenReply.data:type_name -> shorturl.v1.data
+var file_shorturl_public_v1_shorturl_proto_depIdxs = []int32{
+	2, // 0: shorturl.v1.ShortenReply.data:type_name -> shorturl.v1.Data
 	0, // 1: shorturl.v1.Public.CreateShortUrl:input_type -> shorturl.v1.ShortenRequest
 	1, // 2: shorturl.v1.Public.CreateShortUrl:output_type -> shorturl.v1.ShortenReply
 	2, // [2:3] is the sub-list for method output_type
@@ -263,26 +263,26 @@ var file_api_shorturl_public_v1_shorturl_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_api_shorturl_public_v1_shorturl_proto_init() }
-func file_api_shorturl_public_v1_shorturl_proto_init() {
-	if File_api_shorturl_public_v1_shorturl_proto != nil {
+func init() { file_shorturl_public_v1_shorturl_proto_init() }
+func file_shorturl_public_v1_shorturl_proto_init() {
+	if File_shorturl_public_v1_shorturl_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_shorturl_public_v1_shorturl_proto_rawDesc), len(file_api_shorturl_public_v1_shorturl_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_shorturl_public_v1_shorturl_proto_rawDesc), len(file_shorturl_public_v1_shorturl_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_api_shorturl_public_v1_shorturl_proto_goTypes,
-		DependencyIndexes: file_api_shorturl_public_v1_shorturl_proto_depIdxs,
-		MessageInfos:      file_api_shorturl_public_v1_shorturl_proto_msgTypes,
+		GoTypes:           file_shorturl_public_v1_shorturl_proto_goTypes,
+		DependencyIndexes: file_shorturl_public_v1_shorturl_proto_depIdxs,
+		MessageInfos:      file_shorturl_public_v1_shorturl_proto_msgTypes,
 	}.Build()
-	File_api_shorturl_public_v1_shorturl_proto = out.File
-	file_api_shorturl_public_v1_shorturl_proto_goTypes = nil
-	file_api_shorturl_public_v1_shorturl_proto_depIdxs = nil
+	File_shorturl_public_v1_shorturl_proto = out.File
+	file_shorturl_public_v1_shorturl_proto_goTypes = nil
+	file_shorturl_public_v1_shorturl_proto_depIdxs = nil
 }

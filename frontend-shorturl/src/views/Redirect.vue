@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  data() {
+  client() {
     return {
       originalUrl: '',
       error: false
@@ -21,10 +21,10 @@ export default {
   },
   async mounted() {
     try {
-      const { data } = await this.$axios.get(`/api/${this.$route.params.code}`)
-      this.originalUrl = data.url
+      const { client } = await this.$axios.get(`/api/${this.$route.params.code}`)
+      this.originalUrl = client.url
       setTimeout(() => {
-        window.location.href = data.url
+        window.location.href = client.url
       }, 1500)
     } catch {
       this.error = true

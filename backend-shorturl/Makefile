@@ -44,6 +44,15 @@ api:
 	       --openapi_out=fq_schema_naming=true,default_response=false:. \
 	       $(API_PROTO_FILES)
 
+.PHONY: conf
+# conf
+conf:
+	protoc --proto_path=./internal/conf \
+           --proto_path=./third_party \
+           --go_out=. \
+           --go-http_out=. \
+           internal/conf/conf.proto
+
 .PHONY: build
 # build
 build:
@@ -59,6 +68,22 @@ generate:
 # wire
 wire:
 	cd ./cmd/backend-shorturl && wire
+.PHONY: startdb
+
+# start db
+startdb:
+	cd deploy/mysql && docker-compose up -d
+
+.PHONY: stopdb
+# stop db
+stopdb:
+	cd deploy/mysql && docker-compose down
+
+.PHONY: run
+# run
+run:
+	kratos run
+
 
 .PHONY: all
 # generate all

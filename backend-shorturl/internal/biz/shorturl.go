@@ -1,8 +1,8 @@
 package biz
 
 import (
-	"backend-shorturl/internal/data/ent"
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -26,9 +26,8 @@ type ShortUrlReply struct {
 
 // ShortUrlRepo is a ShortUrl repo.
 type ShortUrlRepo interface {
-	CreateShortUrl(ctx context.Context, url *ShortUrl) (*ent.Shorturl, error)
+	Save(ctx context.Context, url *ShortUrl) (int64, error)
 	//FindByKey(ctx context.Context, key string) (*ShortUrl, error)
-	//Exists(ctx context.Context, longURL string) (string, bool)
 }
 
 // ShortUrlUsecase is a ShortUrl usecase.
@@ -39,9 +38,7 @@ type ShortUrlUsecase struct {
 
 // NewShortUrlUsecase new a ShortUrl usecase.
 func NewShortUrlUsecase(repo ShortUrlRepo, logger log.Logger) *ShortUrlUsecase {
-	return &ShortUrlUsecase{
-		repo: repo,
-		log:  log.NewHelper(logger)}
+	return &ShortUrlUsecase{repo: repo, log: log.NewHelper(logger)}
 }
 
 // CreateShortUrl 创建短链接
@@ -52,6 +49,7 @@ func (uc *ShortUrlUsecase) CreateShortUrl(ctx context.Context, params *ShortUrl)
 		uc.log.Errorf("generate short code error: %v", err)
 		return nil, err
 	}
+
 	// 2. 构造实体
 	now := time.Now()
 	shortUrl := &ShortUrl{
@@ -59,12 +57,15 @@ func (uc *ShortUrlUsecase) CreateShortUrl(ctx context.Context, params *ShortUrl)
 		ShortCode:  shortCode,
 		ExpireTime: params.ExpireTime,
 	}
+
 	// 3. 存储到数据库
-	_, err = uc.repo.CreateShortUrl(ctx, shortUrl)
+	urlInfo, err := uc.repo.Save(ctx, shortUrl)
 	if err != nil {
 		uc.log.Errorf("save short url error: %v", err)
 		return nil, err
 	}
+
+	fmt.Printf("ShortUrl Info = %v", urlInfo)
 	// 4. 构造返回结果
 	return &ShortUrlReply{
 		ShortCode:  shortCode,
