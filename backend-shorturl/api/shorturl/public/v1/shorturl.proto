@@ -14,8 +14,17 @@ service Public {
       body:"*"
     };
   }
+  rpc Redirect (RedirectRequest) returns (RedirectReply) {
+    option (google.api.http) = {
+      get: "/api/{code}"
+      response_body: "long_url"
+      additional_bindings: {
+        get: "/api/{code}/redirect"
+        response_body: "long_url"
+      }
+    };
+  }
 }
-
 message ShortenRequest{
   string long_url=1;
   string expire_time =2 ;
@@ -32,4 +41,12 @@ message Data{
    string long_url=3;
    string create_at=4;
    string expire_time=5;
+}
+
+message RedirectRequest{
+  string code = 1;
+}
+
+message RedirectReply{
+  string long_url = 1;
 }

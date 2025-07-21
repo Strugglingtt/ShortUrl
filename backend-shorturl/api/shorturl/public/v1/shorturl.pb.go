@@ -210,6 +210,94 @@ func (x *Data) GetExpireTime() string {
 	return ""
 }
 
+type RedirectRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RedirectRequest) Reset() {
+	*x = RedirectRequest{}
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RedirectRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RedirectRequest) ProtoMessage() {}
+
+func (x *RedirectRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RedirectRequest.ProtoReflect.Descriptor instead.
+func (*RedirectRequest) Descriptor() ([]byte, []int) {
+	return file_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *RedirectRequest) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+type RedirectReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	LongUrl       string                 `protobuf:"bytes,1,opt,name=long_url,json=longUrl,proto3" json:"long_url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RedirectReply) Reset() {
+	*x = RedirectReply{}
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RedirectReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RedirectReply) ProtoMessage() {}
+
+func (x *RedirectReply) ProtoReflect() protoreflect.Message {
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RedirectReply.ProtoReflect.Descriptor instead.
+func (*RedirectReply) Descriptor() ([]byte, []int) {
+	return file_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *RedirectReply) GetLongUrl() string {
+	if x != nil {
+		return x.LongUrl
+	}
+	return ""
+}
+
 var File_shorturl_public_v1_shorturl_proto protoreflect.FileDescriptor
 
 const file_shorturl_public_v1_shorturl_proto_rawDesc = "" +
@@ -230,9 +318,14 @@ const file_shorturl_public_v1_shorturl_proto_rawDesc = "" +
 	"\blong_url\x18\x03 \x01(\tR\alongUrl\x12\x1b\n" +
 	"\tcreate_at\x18\x04 \x01(\tR\bcreateAt\x12\x1f\n" +
 	"\vexpire_time\x18\x05 \x01(\tR\n" +
-	"expireTime2k\n" +
+	"expireTime\"%\n" +
+	"\x0fRedirectRequest\x12\x12\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\"*\n" +
+	"\rRedirectReply\x12\x19\n" +
+	"\blong_url\x18\x01 \x01(\tR\alongUrl2\xf3\x01\n" +
 	"\x06Public\x12a\n" +
-	"\x0eCreateShortUrl\x12\x1b.shorturl.v1.ShortenRequest\x1a\x19.shorturl.v1.ShortenReply\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/shortenB,Z*backend-shorturl/api/shorturl/public/v1;v1b\x06proto3"
+	"\x0eCreateShortUrl\x12\x1b.shorturl.v1.ShortenRequest\x1a\x19.shorturl.v1.ShortenReply\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/shorten\x12\x85\x01\n" +
+	"\bRedirect\x12\x1c.shorturl.v1.RedirectRequest\x1a\x1a.shorturl.v1.RedirectReply\"?\x82\xd3\xe4\x93\x029Z b\blong_url\x12\x14/api/{code}/redirectb\blong_url\x12\v/api/{code}B,Z*backend-shorturl/api/shorturl/public/v1;v1b\x06proto3"
 
 var (
 	file_shorturl_public_v1_shorturl_proto_rawDescOnce sync.Once
@@ -246,18 +339,22 @@ func file_shorturl_public_v1_shorturl_proto_rawDescGZIP() []byte {
 	return file_shorturl_public_v1_shorturl_proto_rawDescData
 }
 
-var file_shorturl_public_v1_shorturl_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_shorturl_public_v1_shorturl_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_shorturl_public_v1_shorturl_proto_goTypes = []any{
-	(*ShortenRequest)(nil), // 0: shorturl.v1.ShortenRequest
-	(*ShortenReply)(nil),   // 1: shorturl.v1.ShortenReply
-	(*Data)(nil),           // 2: shorturl.v1.Data
+	(*ShortenRequest)(nil),  // 0: shorturl.v1.ShortenRequest
+	(*ShortenReply)(nil),    // 1: shorturl.v1.ShortenReply
+	(*Data)(nil),            // 2: shorturl.v1.Data
+	(*RedirectRequest)(nil), // 3: shorturl.v1.RedirectRequest
+	(*RedirectReply)(nil),   // 4: shorturl.v1.RedirectReply
 }
 var file_shorturl_public_v1_shorturl_proto_depIdxs = []int32{
 	2, // 0: shorturl.v1.ShortenReply.data:type_name -> shorturl.v1.Data
 	0, // 1: shorturl.v1.Public.CreateShortUrl:input_type -> shorturl.v1.ShortenRequest
-	1, // 2: shorturl.v1.Public.CreateShortUrl:output_type -> shorturl.v1.ShortenReply
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
+	3, // 2: shorturl.v1.Public.Redirect:input_type -> shorturl.v1.RedirectRequest
+	1, // 3: shorturl.v1.Public.CreateShortUrl:output_type -> shorturl.v1.ShortenReply
+	4, // 4: shorturl.v1.Public.Redirect:output_type -> shorturl.v1.RedirectReply
+	3, // [3:5] is the sub-list for method output_type
+	1, // [1:3] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -274,7 +371,7 @@ func file_shorturl_public_v1_shorturl_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_shorturl_public_v1_shorturl_proto_rawDesc), len(file_shorturl_public_v1_shorturl_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

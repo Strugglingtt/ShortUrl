@@ -20,14 +20,18 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationPublicCreateShortUrl = "/shorturl.v1.Public/CreateShortUrl"
+const OperationPublicRedirect = "/shorturl.v1.Public/Redirect"
 
 type PublicHTTPServer interface {
 	CreateShortUrl(context.Context, *ShortenRequest) (*ShortenReply, error)
+	Redirect(context.Context, *RedirectRequest) (*RedirectReply, error)
 }
 
 func RegisterPublicHTTPServer(s *http.Server, srv PublicHTTPServer) {
 	r := s.Route("/")
 	r.POST("/api/shorten", _Public_CreateShortUrl0_HTTP_Handler(srv))
+	r.GET("/api/{code}/redirect", _Public_Redirect0_HTTP_Handler(srv))
+	r.GET("/api/{code}", _Public_Redirect1_HTTP_Handler(srv))
 }
 
 func _Public_CreateShortUrl0_HTTP_Handler(srv PublicHTTPServer) func(ctx http.Context) error {
@@ -52,8 +56,53 @@ func _Public_CreateShortUrl0_HTTP_Handler(srv PublicHTTPServer) func(ctx http.Co
 	}
 }
 
+func _Public_Redirect0_HTTP_Handler(srv PublicHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RedirectRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPublicRedirect)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Redirect(ctx, req.(*RedirectRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RedirectReply)
+		return ctx.Result(200, reply.LongUrl)
+	}
+}
+
+func _Public_Redirect1_HTTP_Handler(srv PublicHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RedirectRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPublicRedirect)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Redirect(ctx, req.(*RedirectRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RedirectReply)
+		return ctx.Result(200, reply.LongUrl)
+	}
+}
+
 type PublicHTTPClient interface {
 	CreateShortUrl(ctx context.Context, req *ShortenRequest, opts ...http.CallOption) (rsp *ShortenReply, err error)
+	Redirect(ctx context.Context, req *RedirectRequest, opts ...http.CallOption) (rsp *RedirectReply, err error)
 }
 
 type PublicHTTPClientImpl struct {
@@ -71,6 +120,19 @@ func (c *PublicHTTPClientImpl) CreateShortUrl(ctx context.Context, in *ShortenRe
 	opts = append(opts, http.Operation(OperationPublicCreateShortUrl))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *PublicHTTPClientImpl) Redirect(ctx context.Context, in *RedirectRequest, opts ...http.CallOption) (*RedirectReply, error) {
+	var out RedirectReply
+	pattern := "/api/{code}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationPublicRedirect))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out.LongUrl, opts...)
 	if err != nil {
 		return nil, err
 	}

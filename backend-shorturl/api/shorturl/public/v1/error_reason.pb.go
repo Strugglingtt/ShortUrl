@@ -7,6 +7,7 @@
 package v1
 
 import (
+	_ "github.com/go-kratos/kratos/v2/errors"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -24,19 +25,20 @@ const (
 type ErrorReason int32
 
 const (
-	ErrorReason_GREETER_UNSPECIFIED ErrorReason = 0
-	ErrorReason_USER_NOT_FOUND      ErrorReason = 1
+	// 为某个枚举单独设置错误码
+	ErrorReason_USER_NOT_FOUND  ErrorReason = 0
+	ErrorReason_CONTENT_MISSING ErrorReason = 1
 )
 
 // Enum value maps for ErrorReason.
 var (
 	ErrorReason_name = map[int32]string{
-		0: "GREETER_UNSPECIFIED",
-		1: "USER_NOT_FOUND",
+		0: "USER_NOT_FOUND",
+		1: "CONTENT_MISSING",
 	}
 	ErrorReason_value = map[string]int32{
-		"GREETER_UNSPECIFIED": 0,
-		"USER_NOT_FOUND":      1,
+		"USER_NOT_FOUND":  0,
+		"CONTENT_MISSING": 1,
 	}
 )
 
@@ -71,11 +73,10 @@ var File_shorturl_public_v1_error_reason_proto protoreflect.FileDescriptor
 
 const file_shorturl_public_v1_error_reason_proto_rawDesc = "" +
 	"\n" +
-	"%shorturl/public/v1/error_reason.proto\x12\rhelloworld.v1*:\n" +
-	"\vErrorReason\x12\x17\n" +
-	"\x13GREETER_UNSPECIFIED\x10\x00\x12\x12\n" +
-	"\x0eUSER_NOT_FOUND\x10\x01BF\n" +
-	"\vshorturl.v1P\x01Z#backend-shorturl/api/shorturl/v1;v1\xa2\x02\x0fAPIHelloworldV1b\x06proto3"
+	"%shorturl/public/v1/error_reason.proto\x12\rhelloworld.v1\x1a\x13errors/errors.proto*H\n" +
+	"\vErrorReason\x12\x18\n" +
+	"\x0eUSER_NOT_FOUND\x10\x00\x1a\x04\xa8E\x94\x03\x12\x19\n" +
+	"\x0fCONTENT_MISSING\x10\x01\x1a\x04\xa8E\x90\x03\x1a\x04\xa0E\xf4\x03B%Z#backend-shorturl/api/shorturl/v1;v1b\x06proto3"
 
 var (
 	file_shorturl_public_v1_error_reason_proto_rawDescOnce sync.Once

@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"backend-shorturl/internal/conf"
 
@@ -20,9 +22,9 @@ import (
 // go build -ldflags "-X main.Version=x.y.z"
 var (
 	// Name is the name of the compiled software.
-	Name string
+	Name = "ShortUrl-Service"
 	// Version is the version of the compiled software.
-	Version string
+	Version = "1.0.0"
 	// flagconf is the config flag.
 	flagconf string
 
@@ -41,7 +43,6 @@ func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
 		kratos.Metadata(map[string]string{}),
 		kratos.Logger(logger),
 		kratos.Server(
-			gs,
 			hs,
 		),
 	)
@@ -84,4 +85,8 @@ func main() {
 	if err := app.Run(); err != nil {
 		panic(err)
 	}
+	d := make(chan os.Signal, 1)
+	signal.Notify(d, syscall.SIGINT, syscall.SIGTERM)
+	<-d
+	app.Stop() //触发反注册并优雅关闭服务
 }

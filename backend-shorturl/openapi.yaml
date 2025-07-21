@@ -25,6 +25,42 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/shorturl.v1.ShortenReply'
+    /api/{code}:
+        get:
+            tags:
+                - Public
+            operationId: Public_Redirect
+            parameters:
+                - name: code
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/shorturl.v1.RedirectReply'
+    /api/{code}/redirect:
+        get:
+            tags:
+                - Public
+            operationId: Public_Redirect
+            parameters:
+                - name: code
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/shorturl.v1.RedirectReply'
 components:
     schemas:
         shorturl.v1.Data:
@@ -39,6 +75,11 @@ components:
                 createAt:
                     type: string
                 expireTime:
+                    type: string
+        shorturl.v1.RedirectReply:
+            type: object
+            properties:
+                longUrl:
                     type: string
         shorturl.v1.ShortenReply:
             type: object

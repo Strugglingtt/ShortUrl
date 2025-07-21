@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -27,7 +28,7 @@ type ShortUrlReply struct {
 // ShortUrlRepo is a ShortUrl repo.
 type ShortUrlRepo interface {
 	Save(ctx context.Context, url *ShortUrl) (int64, error)
-	//FindByKey(ctx context.Context, key string) (*ShortUrl, error)
+	GetOriginalURL(ctx context.Context, code string) (string, error)
 }
 
 // ShortUrlUsecase is a ShortUrl usecase.
@@ -74,4 +75,12 @@ func (uc *ShortUrlUsecase) CreateShortUrl(ctx context.Context, params *ShortUrl)
 		CreateTime: now.Format(time.RFC3339),
 		ExpireTime: params.ExpireTime.Format(time.RFC3339),
 	}, nil
+}
+
+func (uc *ShortUrlUsecase) GetOriginalURL(ctx context.Context, code string) (string, error) {
+	if code == "" {
+		return "", errors.New("code is empty")
+	}
+
+	return uc.repo.GetOriginalURL(ctx, code)
 }

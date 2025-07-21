@@ -3,6 +3,10 @@ package service
 import (
 	"backend-shorturl/internal/biz"
 	"context"
+	"github.com/go-kratos/kratos/v2/errors"
+
+	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -57,4 +61,43 @@ func (s *PublicService) CreateShortUrl(ctx context.Context, req *pb.ShortenReque
 			ExpireTime: reply.ExpireTime,
 		},
 	}, nil
+}
+
+// Redirect 短链接重定向跳转
+func (s *PublicService) Redirect(ctx context.Context, req *pb.RedirectRequest) (*pb.RedirectReply, error) {
+	if req.Code == "" {
+		return nil, errors.BadRequest("REDIRECT", "code is required")
+	}
+
+	url, err := s.uc.GetOriginalURL(ctx, req.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	// 获取HTTP传输器
+	if tr, ok := transport.FromServerContext(ctx); ok && tr.Kind() == transport.KindHTTP {
+		if ht, ok := tr.(*http.Transport); ok {
+			// 设置重定向头
+			ht.ReplyHeader().Set("Location", url)
+			// 设置缓存控制头
+			ht.ReplyHeader().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+			ht.ReplyHeader().Set("Pragma", "no-cache")
+			ht.ReplyHeader().Set("Expires", "0")
+
+			// 使用方式
+			return nil, RedirectError(url)
+		}
+	}
+
+	// 非HTTP请求或无法重定向时返回原始URL
+	return &pb.RedirectReply{LongUrl: url}, nil
+}
+func RedirectError(url string) error {
+	return errors.New(
+		302,
+		"REDIRECT",
+		"Resource has moved",
+	).WithMetadata(map[string]string{
+		"Location": url,
+	})
 }

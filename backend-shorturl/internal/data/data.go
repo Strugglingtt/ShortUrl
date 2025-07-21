@@ -3,7 +3,6 @@ package data
 import (
 	"backend-shorturl/internal/conf"
 	"backend-shorturl/internal/data/ent"
-	"context"
 	"fmt"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -44,8 +43,8 @@ func NewEntClient(c *conf.Data, logger log.Logger) (*ent.Client, error) {
 	}
 	fmt.Println("connect to mysql Success")
 	// 自动创建表结构（开发环境推荐）
-	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Fatalf("failed creating schema resources: %v", err)
-	}
+	//if err := client.Schema.Create(context.Background()); err != nil {
+	//	log.Fatalf("failed creating schema resources: %v", err)
+	//}
 	return client, nil
 }
