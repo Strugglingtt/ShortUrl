@@ -21,6 +21,8 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Public_CreateShortUrl_FullMethodName = "/shorturl.v1.Public/CreateShortUrl"
 	Public_Redirect_FullMethodName       = "/shorturl.v1.Public/Redirect"
+	Public_GetStatics_FullMethodName     = "/shorturl.v1.Public/GetStatics"
+	Public_GetAllStatics_FullMethodName  = "/shorturl.v1.Public/GetAllStatics"
 )
 
 // PublicClient is the client API for Public service.
@@ -31,6 +33,8 @@ const (
 type PublicClient interface {
 	CreateShortUrl(ctx context.Context, in *ShortenRequest, opts ...grpc.CallOption) (*ShortenReply, error)
 	Redirect(ctx context.Context, in *RedirectRequest, opts ...grpc.CallOption) (*RedirectReply, error)
+	GetStatics(ctx context.Context, in *GetStaticsRequest, opts ...grpc.CallOption) (*GetStaticsReply, error)
+	GetAllStatics(ctx context.Context, in *GetAllStaticsRequest, opts ...grpc.CallOption) (*GetAllStaticsReply, error)
 }
 
 type publicClient struct {
@@ -61,6 +65,26 @@ func (c *publicClient) Redirect(ctx context.Context, in *RedirectRequest, opts .
 	return out, nil
 }
 
+func (c *publicClient) GetStatics(ctx context.Context, in *GetStaticsRequest, opts ...grpc.CallOption) (*GetStaticsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetStaticsReply)
+	err := c.cc.Invoke(ctx, Public_GetStatics_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *publicClient) GetAllStatics(ctx context.Context, in *GetAllStaticsRequest, opts ...grpc.CallOption) (*GetAllStaticsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllStaticsReply)
+	err := c.cc.Invoke(ctx, Public_GetAllStatics_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PublicServer is the server API for Public service.
 // All implementations must embed UnimplementedPublicServer
 // for forward compatibility.
@@ -69,6 +93,8 @@ func (c *publicClient) Redirect(ctx context.Context, in *RedirectRequest, opts .
 type PublicServer interface {
 	CreateShortUrl(context.Context, *ShortenRequest) (*ShortenReply, error)
 	Redirect(context.Context, *RedirectRequest) (*RedirectReply, error)
+	GetStatics(context.Context, *GetStaticsRequest) (*GetStaticsReply, error)
+	GetAllStatics(context.Context, *GetAllStaticsRequest) (*GetAllStaticsReply, error)
 	mustEmbedUnimplementedPublicServer()
 }
 
@@ -84,6 +110,12 @@ func (UnimplementedPublicServer) CreateShortUrl(context.Context, *ShortenRequest
 }
 func (UnimplementedPublicServer) Redirect(context.Context, *RedirectRequest) (*RedirectReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Redirect not implemented")
+}
+func (UnimplementedPublicServer) GetStatics(context.Context, *GetStaticsRequest) (*GetStaticsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStatics not implemented")
+}
+func (UnimplementedPublicServer) GetAllStatics(context.Context, *GetAllStaticsRequest) (*GetAllStaticsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllStatics not implemented")
 }
 func (UnimplementedPublicServer) mustEmbedUnimplementedPublicServer() {}
 func (UnimplementedPublicServer) testEmbeddedByValue()                {}
@@ -142,6 +174,42 @@ func _Public_Redirect_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Public_GetStatics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetStaticsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PublicServer).GetStatics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Public_GetStatics_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PublicServer).GetStatics(ctx, req.(*GetStaticsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Public_GetAllStatics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllStaticsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PublicServer).GetAllStatics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Public_GetAllStatics_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PublicServer).GetAllStatics(ctx, req.(*GetAllStaticsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Public_ServiceDesc is the grpc.ServiceDesc for Public service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -156,6 +224,14 @@ var Public_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Redirect",
 			Handler:    _Public_Redirect_Handler,
+		},
+		{
+			MethodName: "GetStatics",
+			Handler:    _Public_GetStatics_Handler,
+		},
+		{
+			MethodName: "GetAllStatics",
+			Handler:    _Public_GetAllStatics_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

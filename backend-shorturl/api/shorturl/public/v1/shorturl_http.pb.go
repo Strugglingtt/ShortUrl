@@ -20,18 +20,24 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationPublicCreateShortUrl = "/shorturl.v1.Public/CreateShortUrl"
+const OperationPublicGetAllStatics = "/shorturl.v1.Public/GetAllStatics"
+const OperationPublicGetStatics = "/shorturl.v1.Public/GetStatics"
 const OperationPublicRedirect = "/shorturl.v1.Public/Redirect"
 
 type PublicHTTPServer interface {
 	CreateShortUrl(context.Context, *ShortenRequest) (*ShortenReply, error)
+	GetAllStatics(context.Context, *GetAllStaticsRequest) (*GetAllStaticsReply, error)
+	GetStatics(context.Context, *GetStaticsRequest) (*GetStaticsReply, error)
 	Redirect(context.Context, *RedirectRequest) (*RedirectReply, error)
 }
 
 func RegisterPublicHTTPServer(s *http.Server, srv PublicHTTPServer) {
 	r := s.Route("/")
 	r.POST("/api/shorten", _Public_CreateShortUrl0_HTTP_Handler(srv))
-	r.GET("/api/{code}/redirect", _Public_Redirect0_HTTP_Handler(srv))
-	r.GET("/api/{code}", _Public_Redirect1_HTTP_Handler(srv))
+	r.GET("/{code}/redirect", _Public_Redirect0_HTTP_Handler(srv))
+	r.GET("/{code}", _Public_Redirect1_HTTP_Handler(srv))
+	r.GET("/api/stats/{short_code}", _Public_GetStatics0_HTTP_Handler(srv))
+	r.GET("/stats/all", _Public_GetAllStatics0_HTTP_Handler(srv))
 }
 
 func _Public_CreateShortUrl0_HTTP_Handler(srv PublicHTTPServer) func(ctx http.Context) error {
@@ -100,8 +106,51 @@ func _Public_Redirect1_HTTP_Handler(srv PublicHTTPServer) func(ctx http.Context)
 	}
 }
 
+func _Public_GetStatics0_HTTP_Handler(srv PublicHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetStaticsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPublicGetStatics)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetStatics(ctx, req.(*GetStaticsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetStaticsReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Public_GetAllStatics0_HTTP_Handler(srv PublicHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetAllStaticsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPublicGetAllStatics)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetAllStatics(ctx, req.(*GetAllStaticsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetAllStaticsReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type PublicHTTPClient interface {
 	CreateShortUrl(ctx context.Context, req *ShortenRequest, opts ...http.CallOption) (rsp *ShortenReply, err error)
+	GetAllStatics(ctx context.Context, req *GetAllStaticsRequest, opts ...http.CallOption) (rsp *GetAllStaticsReply, err error)
+	GetStatics(ctx context.Context, req *GetStaticsRequest, opts ...http.CallOption) (rsp *GetStaticsReply, err error)
 	Redirect(ctx context.Context, req *RedirectRequest, opts ...http.CallOption) (rsp *RedirectReply, err error)
 }
 
@@ -126,9 +175,35 @@ func (c *PublicHTTPClientImpl) CreateShortUrl(ctx context.Context, in *ShortenRe
 	return &out, nil
 }
 
+func (c *PublicHTTPClientImpl) GetAllStatics(ctx context.Context, in *GetAllStaticsRequest, opts ...http.CallOption) (*GetAllStaticsReply, error) {
+	var out GetAllStaticsReply
+	pattern := "/stats/all"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationPublicGetAllStatics))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *PublicHTTPClientImpl) GetStatics(ctx context.Context, in *GetStaticsRequest, opts ...http.CallOption) (*GetStaticsReply, error) {
+	var out GetStaticsReply
+	pattern := "/api/stats/{short_code}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationPublicGetStatics))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *PublicHTTPClientImpl) Redirect(ctx context.Context, in *RedirectRequest, opts ...http.CallOption) (*RedirectReply, error) {
 	var out RedirectReply
-	pattern := "/api/{code}"
+	pattern := "/{code}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationPublicRedirect))
 	opts = append(opts, http.PathTemplate(pattern))

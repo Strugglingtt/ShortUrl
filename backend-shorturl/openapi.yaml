@@ -3,9 +3,9 @@
 
 openapi: 3.0.3
 info:
-    title: Public API
+    title: ShortUrl Public API
     description: The greeting service definition.
-    version: 0.0.1
+    version: 1.0.0
 paths:
     /api/shorten:
         post:
@@ -25,7 +25,48 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/shorturl.v1.ShortenReply'
-    /api/{code}:
+    /api/stats/{shortCode}:
+        get:
+            tags:
+                - Public
+            operationId: Public_GetStatics
+            parameters:
+                - name: shortCode
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/shorturl.v1.GetStaticsReply'
+    /stats/all:
+        get:
+            tags:
+                - Public
+            operationId: Public_GetAllStatics
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: size
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/shorturl.v1.GetAllStaticsReply'
+    /{code}:
         get:
             tags:
                 - Public
@@ -43,7 +84,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/shorturl.v1.RedirectReply'
-    /api/{code}/redirect:
+    /{code}/redirect:
         get:
             tags:
                 - Public
@@ -76,6 +117,55 @@ components:
                     type: string
                 expireTime:
                     type: string
+        shorturl.v1.GetAllStaticsReply:
+            type: object
+            properties:
+                code:
+                    type: string
+                message:
+                    type: string
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/shorturl.v1.GetAllStaticsReply_Data'
+                total:
+                    type: integer
+                    format: int32
+                Page:
+                    type: integer
+                    format: int32
+                TotalPages:
+                    type: integer
+                    format: int32
+        shorturl.v1.GetAllStaticsReply_Data:
+            type: object
+            properties:
+                shortCode:
+                    type: string
+                originalUrl:
+                    type: string
+                totalClicks:
+                    type: integer
+                    format: uint32
+        shorturl.v1.GetStaticsReply:
+            type: object
+            properties:
+                code:
+                    type: string
+                message:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/shorturl.v1.GetStaticsReply_Data'
+        shorturl.v1.GetStaticsReply_Data:
+            type: object
+            properties:
+                shortCode:
+                    type: string
+                originalUrl:
+                    type: string
+                totalClicks:
+                    type: integer
+                    format: uint32
         shorturl.v1.RedirectReply:
             type: object
             properties:

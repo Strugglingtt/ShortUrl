@@ -43,6 +43,22 @@ func (r *ShortUrlRepo) Save(ctx context.Context, su *biz.ShortUrl) (int64, error
 	return si.ID, nil
 }
 
+func (r *ShortUrlRepo) IsExit(ctx context.Context, url *biz.ShortUrl) (bool, error) {
+	Exit, err := r.data.client.Shorturl.Query().Where(shorturl.LongURLEQ(url.LongUrl)).Exist(ctx)
+	if err != nil {
+		return false, err
+	}
+	return Exit, nil
+}
+
+func (r *ShortUrlRepo) IsExitByCode(ctx context.Context, code string) (bool, error) {
+	Exit, err := r.data.client.Shorturl.Query().Where(shorturl.ShortCodeEQ(code)).Exist(ctx)
+	if err != nil {
+		return false, err
+	}
+	return Exit, nil
+}
+
 func (r *ShortUrlRepo) GetOriginalURL(ctx context.Context, code string) (string, error) {
 	// 使用Ent客户端查询
 	url, err := r.data.client.Shorturl.
@@ -59,4 +75,60 @@ func (r *ShortUrlRepo) GetOriginalURL(ctx context.Context, code string) (string,
 	}
 
 	return url.LongURL, nil
+}
+
+func (r *ShortUrlRepo) GetShortStaticsInfo(ctx context.Context, code string) (*biz.ShortStaticsInfo, error) {
+	cc, err := r.data.client.Shorturl.Query().Where(shorturl.ShortCodeEQ(code)).First(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &biz.ShortStaticsInfo{
+		ShortCode:   cc.ShortCode,
+		OriginUrl:   cc.LongURL,
+		TotalClicks: uint32(cc.AccessCount),
+	}, nil
+}
+
+func (r *ShortUrlRepo) GetAllShorStaticsInfos(ctx context.Context, page, size int) ([]*biz.ShortStaticsInfo, int, int, error) {
+	//ent orm的分页使用Order、limit、Offset进行分页
+	// 计算偏移量
+	offset := (page - 1) * size
+
+	list, err := r.data.client.Shorturl.Query().
+		Order().
+		Limit(size).
+		Offset(offset).
+		All(ctx)
+	if err != nil {
+		return nil, 0, 0, err
+	}
+	result := make([]*biz.ShortStaticsInfo, 0)
+	for _, v := range list {
+		result = append(result, &biz.ShortStaticsInfo{
+			ShortCode:   v.ShortCode,
+			OriginUrl:   v.LongURL,
+			TotalClicks: uint32(v.AccessCount),
+		})
+	}
+	//获取总记录数
+	total, _ := r.GetTotalCount(ctx)
+	//计算总页数
+	total_page := r.CalculateTotalPages(total, size)
+
+	return result, total_page, total, nil
+}
+
+// GetTotalCount 获取总记录数
+func (r *ShortUrlRepo) GetTotalCount(ctx context.Context) (int, error) {
+	return r.data.client.Shorturl.
+		Query().
+		Count(ctx)
+}
+
+// CalculateTotalPages 计算总页数
+func (r *ShortUrlRepo) CalculateTotalPages(totalCount, pageSize int) int {
+	if totalCount == 0 {
+		return 1
+	}
+	return (totalCount + pageSize - 1) / pageSize // 向上取整
 }

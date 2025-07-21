@@ -7,6 +7,7 @@
 package v1
 
 import (
+	_ "github.com/google/gnostic/openapiv3"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -298,11 +299,371 @@ func (x *RedirectReply) GetLongUrl() string {
 	return ""
 }
 
+type GetStaticsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ShortCode     string                 `protobuf:"bytes,1,opt,name=short_code,json=shortCode,proto3" json:"short_code,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetStaticsRequest) Reset() {
+	*x = GetStaticsRequest{}
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetStaticsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetStaticsRequest) ProtoMessage() {}
+
+func (x *GetStaticsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetStaticsRequest.ProtoReflect.Descriptor instead.
+func (*GetStaticsRequest) Descriptor() ([]byte, []int) {
+	return file_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetStaticsRequest) GetShortCode() string {
+	if x != nil {
+		return x.ShortCode
+	}
+	return ""
+}
+
+type GetStaticsReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Data          *GetStaticsReply_Data  `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetStaticsReply) Reset() {
+	*x = GetStaticsReply{}
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetStaticsReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetStaticsReply) ProtoMessage() {}
+
+func (x *GetStaticsReply) ProtoReflect() protoreflect.Message {
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetStaticsReply.ProtoReflect.Descriptor instead.
+func (*GetStaticsReply) Descriptor() ([]byte, []int) {
+	return file_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GetStaticsReply) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *GetStaticsReply) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *GetStaticsReply) GetData() *GetStaticsReply_Data {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+type GetAllStaticsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	Size          int32                  `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAllStaticsRequest) Reset() {
+	*x = GetAllStaticsRequest{}
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAllStaticsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllStaticsRequest) ProtoMessage() {}
+
+func (x *GetAllStaticsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllStaticsRequest.ProtoReflect.Descriptor instead.
+func (*GetAllStaticsRequest) Descriptor() ([]byte, []int) {
+	return file_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *GetAllStaticsRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *GetAllStaticsRequest) GetSize() int32 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+type GetAllStaticsReply struct {
+	state         protoimpl.MessageState     `protogen:"open.v1"`
+	Code          string                     `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Message       string                     `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Data          []*GetAllStaticsReply_Data `protobuf:"bytes,3,rep,name=data,proto3" json:"data,omitempty"`
+	Total         int32                      `protobuf:"varint,4,opt,name=total,proto3" json:"total,omitempty"`
+	Page          int32                      `protobuf:"varint,5,opt,name=Page,proto3" json:"Page,omitempty"`
+	TotalPages    int32                      `protobuf:"varint,6,opt,name=TotalPages,proto3" json:"TotalPages,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAllStaticsReply) Reset() {
+	*x = GetAllStaticsReply{}
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAllStaticsReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllStaticsReply) ProtoMessage() {}
+
+func (x *GetAllStaticsReply) ProtoReflect() protoreflect.Message {
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllStaticsReply.ProtoReflect.Descriptor instead.
+func (*GetAllStaticsReply) Descriptor() ([]byte, []int) {
+	return file_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *GetAllStaticsReply) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *GetAllStaticsReply) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *GetAllStaticsReply) GetData() []*GetAllStaticsReply_Data {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+func (x *GetAllStaticsReply) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *GetAllStaticsReply) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *GetAllStaticsReply) GetTotalPages() int32 {
+	if x != nil {
+		return x.TotalPages
+	}
+	return 0
+}
+
+type GetStaticsReply_Data struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ShortCode     string                 `protobuf:"bytes,1,opt,name=short_code,json=shortCode,proto3" json:"short_code,omitempty"`
+	OriginalUrl   string                 `protobuf:"bytes,2,opt,name=original_url,json=originalUrl,proto3" json:"original_url,omitempty"`
+	TotalClicks   uint32                 `protobuf:"varint,3,opt,name=total_clicks,json=totalClicks,proto3" json:"total_clicks,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetStaticsReply_Data) Reset() {
+	*x = GetStaticsReply_Data{}
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetStaticsReply_Data) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetStaticsReply_Data) ProtoMessage() {}
+
+func (x *GetStaticsReply_Data) ProtoReflect() protoreflect.Message {
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetStaticsReply_Data.ProtoReflect.Descriptor instead.
+func (*GetStaticsReply_Data) Descriptor() ([]byte, []int) {
+	return file_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{6, 0}
+}
+
+func (x *GetStaticsReply_Data) GetShortCode() string {
+	if x != nil {
+		return x.ShortCode
+	}
+	return ""
+}
+
+func (x *GetStaticsReply_Data) GetOriginalUrl() string {
+	if x != nil {
+		return x.OriginalUrl
+	}
+	return ""
+}
+
+func (x *GetStaticsReply_Data) GetTotalClicks() uint32 {
+	if x != nil {
+		return x.TotalClicks
+	}
+	return 0
+}
+
+type GetAllStaticsReply_Data struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ShortCode     string                 `protobuf:"bytes,1,opt,name=short_code,json=shortCode,proto3" json:"short_code,omitempty"`
+	OriginalUrl   string                 `protobuf:"bytes,2,opt,name=original_url,json=originalUrl,proto3" json:"original_url,omitempty"`
+	TotalClicks   uint32                 `protobuf:"varint,3,opt,name=total_clicks,json=totalClicks,proto3" json:"total_clicks,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAllStaticsReply_Data) Reset() {
+	*x = GetAllStaticsReply_Data{}
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAllStaticsReply_Data) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllStaticsReply_Data) ProtoMessage() {}
+
+func (x *GetAllStaticsReply_Data) ProtoReflect() protoreflect.Message {
+	mi := &file_shorturl_public_v1_shorturl_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllStaticsReply_Data.ProtoReflect.Descriptor instead.
+func (*GetAllStaticsReply_Data) Descriptor() ([]byte, []int) {
+	return file_shorturl_public_v1_shorturl_proto_rawDescGZIP(), []int{8, 0}
+}
+
+func (x *GetAllStaticsReply_Data) GetShortCode() string {
+	if x != nil {
+		return x.ShortCode
+	}
+	return ""
+}
+
+func (x *GetAllStaticsReply_Data) GetOriginalUrl() string {
+	if x != nil {
+		return x.OriginalUrl
+	}
+	return ""
+}
+
+func (x *GetAllStaticsReply_Data) GetTotalClicks() uint32 {
+	if x != nil {
+		return x.TotalClicks
+	}
+	return 0
+}
+
 var File_shorturl_public_v1_shorturl_proto protoreflect.FileDescriptor
 
 const file_shorturl_public_v1_shorturl_proto_rawDesc = "" +
 	"\n" +
-	"!shorturl/public/v1/shorturl.proto\x12\vshorturl.v1\x1a\x1cgoogle/api/annotations.proto\"L\n" +
+	"!shorturl/public/v1/shorturl.proto\x12\vshorturl.v1\x1a\x1copenapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\"L\n" +
 	"\x0eShortenRequest\x12\x19\n" +
 	"\blong_url\x18\x01 \x01(\tR\alongUrl\x12\x1f\n" +
 	"\vexpire_time\x18\x02 \x01(\tR\n" +
@@ -322,10 +683,44 @@ const file_shorturl_public_v1_shorturl_proto_rawDesc = "" +
 	"\x0fRedirectRequest\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\"*\n" +
 	"\rRedirectReply\x12\x19\n" +
-	"\blong_url\x18\x01 \x01(\tR\alongUrl2\xf3\x01\n" +
+	"\blong_url\x18\x01 \x01(\tR\alongUrl\"2\n" +
+	"\x11GetStaticsRequest\x12\x1d\n" +
+	"\n" +
+	"short_code\x18\x01 \x01(\tR\tshortCode\"\xe3\x01\n" +
+	"\x0fGetStaticsReply\x12\x12\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x125\n" +
+	"\x04data\x18\x03 \x01(\v2!.shorturl.v1.GetStaticsReply.DataR\x04data\x1ak\n" +
+	"\x04Data\x12\x1d\n" +
+	"\n" +
+	"short_code\x18\x01 \x01(\tR\tshortCode\x12!\n" +
+	"\foriginal_url\x18\x02 \x01(\tR\voriginalUrl\x12!\n" +
+	"\ftotal_clicks\x18\x03 \x01(\rR\vtotalClicks\">\n" +
+	"\x14GetAllStaticsRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x12\n" +
+	"\x04size\x18\x02 \x01(\x05R\x04size\"\xb3\x02\n" +
+	"\x12GetAllStaticsReply\x12\x12\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x128\n" +
+	"\x04data\x18\x03 \x03(\v2$.shorturl.v1.GetAllStaticsReply.DataR\x04data\x12\x14\n" +
+	"\x05total\x18\x04 \x01(\x05R\x05total\x12\x12\n" +
+	"\x04Page\x18\x05 \x01(\x05R\x04Page\x12\x1e\n" +
+	"\n" +
+	"TotalPages\x18\x06 \x01(\x05R\n" +
+	"TotalPages\x1ak\n" +
+	"\x04Data\x12\x1d\n" +
+	"\n" +
+	"short_code\x18\x01 \x01(\tR\tshortCode\x12!\n" +
+	"\foriginal_url\x18\x02 \x01(\tR\voriginalUrl\x12!\n" +
+	"\ftotal_clicks\x18\x03 \x01(\rR\vtotalClicks2\xc0\x03\n" +
 	"\x06Public\x12a\n" +
-	"\x0eCreateShortUrl\x12\x1b.shorturl.v1.ShortenRequest\x1a\x19.shorturl.v1.ShortenReply\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/shorten\x12\x85\x01\n" +
-	"\bRedirect\x12\x1c.shorturl.v1.RedirectRequest\x1a\x1a.shorturl.v1.RedirectReply\"?\x82\xd3\xe4\x93\x029Z b\blong_url\x12\x14/api/{code}/redirectb\blong_url\x12\v/api/{code}B,Z*backend-shorturl/api/shorturl/public/v1;v1b\x06proto3"
+	"\x0eCreateShortUrl\x12\x1b.shorturl.v1.ShortenRequest\x1a\x19.shorturl.v1.ShortenReply\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/shorten\x12}\n" +
+	"\bRedirect\x12\x1c.shorturl.v1.RedirectRequest\x1a\x1a.shorturl.v1.RedirectReply\"7\x82\xd3\xe4\x93\x021Z\x1cb\blong_url\x12\x10/{code}/redirectb\blong_url\x12\a/{code}\x12k\n" +
+	"\n" +
+	"GetStatics\x12\x1e.shorturl.v1.GetStaticsRequest\x1a\x1c.shorturl.v1.GetStaticsReply\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/api/stats/{short_code}\x12g\n" +
+	"\rGetAllStatics\x12!.shorturl.v1.GetAllStaticsRequest\x1a\x1f.shorturl.v1.GetAllStaticsReply\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
+	"/stats/allBM\xbaG\x1e\x12\x1c\n" +
+	"\x13ShortUrl Public API2\x051.0.0Z*backend-shorturl/api/shorturl/public/v1;v1b\x06proto3"
 
 var (
 	file_shorturl_public_v1_shorturl_proto_rawDescOnce sync.Once
@@ -339,25 +734,37 @@ func file_shorturl_public_v1_shorturl_proto_rawDescGZIP() []byte {
 	return file_shorturl_public_v1_shorturl_proto_rawDescData
 }
 
-var file_shorturl_public_v1_shorturl_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_shorturl_public_v1_shorturl_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_shorturl_public_v1_shorturl_proto_goTypes = []any{
-	(*ShortenRequest)(nil),  // 0: shorturl.v1.ShortenRequest
-	(*ShortenReply)(nil),    // 1: shorturl.v1.ShortenReply
-	(*Data)(nil),            // 2: shorturl.v1.Data
-	(*RedirectRequest)(nil), // 3: shorturl.v1.RedirectRequest
-	(*RedirectReply)(nil),   // 4: shorturl.v1.RedirectReply
+	(*ShortenRequest)(nil),          // 0: shorturl.v1.ShortenRequest
+	(*ShortenReply)(nil),            // 1: shorturl.v1.ShortenReply
+	(*Data)(nil),                    // 2: shorturl.v1.Data
+	(*RedirectRequest)(nil),         // 3: shorturl.v1.RedirectRequest
+	(*RedirectReply)(nil),           // 4: shorturl.v1.RedirectReply
+	(*GetStaticsRequest)(nil),       // 5: shorturl.v1.GetStaticsRequest
+	(*GetStaticsReply)(nil),         // 6: shorturl.v1.GetStaticsReply
+	(*GetAllStaticsRequest)(nil),    // 7: shorturl.v1.GetAllStaticsRequest
+	(*GetAllStaticsReply)(nil),      // 8: shorturl.v1.GetAllStaticsReply
+	(*GetStaticsReply_Data)(nil),    // 9: shorturl.v1.GetStaticsReply.Data
+	(*GetAllStaticsReply_Data)(nil), // 10: shorturl.v1.GetAllStaticsReply.Data
 }
 var file_shorturl_public_v1_shorturl_proto_depIdxs = []int32{
-	2, // 0: shorturl.v1.ShortenReply.data:type_name -> shorturl.v1.Data
-	0, // 1: shorturl.v1.Public.CreateShortUrl:input_type -> shorturl.v1.ShortenRequest
-	3, // 2: shorturl.v1.Public.Redirect:input_type -> shorturl.v1.RedirectRequest
-	1, // 3: shorturl.v1.Public.CreateShortUrl:output_type -> shorturl.v1.ShortenReply
-	4, // 4: shorturl.v1.Public.Redirect:output_type -> shorturl.v1.RedirectReply
-	3, // [3:5] is the sub-list for method output_type
-	1, // [1:3] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	2,  // 0: shorturl.v1.ShortenReply.data:type_name -> shorturl.v1.Data
+	9,  // 1: shorturl.v1.GetStaticsReply.data:type_name -> shorturl.v1.GetStaticsReply.Data
+	10, // 2: shorturl.v1.GetAllStaticsReply.data:type_name -> shorturl.v1.GetAllStaticsReply.Data
+	0,  // 3: shorturl.v1.Public.CreateShortUrl:input_type -> shorturl.v1.ShortenRequest
+	3,  // 4: shorturl.v1.Public.Redirect:input_type -> shorturl.v1.RedirectRequest
+	5,  // 5: shorturl.v1.Public.GetStatics:input_type -> shorturl.v1.GetStaticsRequest
+	7,  // 6: shorturl.v1.Public.GetAllStatics:input_type -> shorturl.v1.GetAllStaticsRequest
+	1,  // 7: shorturl.v1.Public.CreateShortUrl:output_type -> shorturl.v1.ShortenReply
+	4,  // 8: shorturl.v1.Public.Redirect:output_type -> shorturl.v1.RedirectReply
+	6,  // 9: shorturl.v1.Public.GetStatics:output_type -> shorturl.v1.GetStaticsReply
+	8,  // 10: shorturl.v1.Public.GetAllStatics:output_type -> shorturl.v1.GetAllStaticsReply
+	7,  // [7:11] is the sub-list for method output_type
+	3,  // [3:7] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_shorturl_public_v1_shorturl_proto_init() }
@@ -371,7 +778,7 @@ func file_shorturl_public_v1_shorturl_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_shorturl_public_v1_shorturl_proto_rawDesc), len(file_shorturl_public_v1_shorturl_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

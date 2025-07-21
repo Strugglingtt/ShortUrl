@@ -2,10 +2,18 @@ syntax = "proto3";
 
 package shorturl.v1;
 
+import "openapi/v3/annotations.proto";
 import "google/api/annotations.proto";
 
 option go_package = "backend-shorturl/api/shorturl/public/v1;v1";
 
+// 定义openapi的信息
+option (openapi.v3.document) = {
+  info:{
+    title: "ShortUrl Public API"
+    version: "1.0.0"
+  }
+};
 // The greeting service definition.
 service Public {
   rpc CreateShortUrl (ShortenRequest) returns (ShortenReply){
@@ -16,12 +24,22 @@ service Public {
   }
   rpc Redirect (RedirectRequest) returns (RedirectReply) {
     option (google.api.http) = {
-      get: "/api/{code}"
+      get: "/{code}"
       response_body: "long_url"
       additional_bindings: {
-        get: "/api/{code}/redirect"
+        get: "/{code}/redirect"
         response_body: "long_url"
       }
+    };
+  }
+  rpc GetStatics (GetStaticsRequest) returns (GetStaticsReply){
+    option (google.api.http) = {
+      get: "/api/stats/{short_code}"
+    };
+  }
+  rpc GetAllStatics (GetAllStaticsRequest) returns (GetAllStaticsReply){
+    option (google.api.http) = {
+      get: "/stats/all"
     };
   }
 }
@@ -49,4 +67,37 @@ message RedirectRequest{
 
 message RedirectReply{
   string long_url = 1;
+}
+
+message GetStaticsRequest{
+  string short_code=1;
+}
+message GetStaticsReply {
+  message Data {
+    string short_code = 1;
+    string original_url = 2;
+    uint32 total_clicks = 3;
+  }
+
+  string code = 1;
+  string message = 2;
+  Data data = 3;
+}
+
+message GetAllStaticsRequest{
+  int32 page=1 ;
+  int32 size=2 ;
+}
+message GetAllStaticsReply{
+  message Data {
+    string short_code = 1;
+    string original_url = 2;
+    uint32 total_clicks = 3;
+  }
+  string code=1;
+  string message=2;
+  repeated Data data =3;
+  int32 total =4;
+  int32 Page =5;
+  int32 TotalPages =6;
 }

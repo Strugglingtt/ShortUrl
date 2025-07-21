@@ -46,7 +46,7 @@ func (s *PublicService) CreateShortUrl(ctx context.Context, req *pb.ShortenReque
 	})
 	if err != nil {
 		s.log.Errorf("CreateShortUrl error: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to create short url")
+		return nil, err
 	}
 
 	// 4. 构造响应
@@ -74,7 +74,9 @@ func (s *PublicService) Redirect(ctx context.Context, req *pb.RedirectRequest) (
 		return nil, err
 	}
 
-	// 获取HTTP传输器
+	//实际这里还要增加短链的数据，对短链的一个点击详情进行统计
+
+	// 获取HTTP传输器 进行一个重定向跳转
 	if tr, ok := transport.FromServerContext(ctx); ok && tr.Kind() == transport.KindHTTP {
 		if ht, ok := tr.(*http.Transport); ok {
 			// 设置重定向头
@@ -100,4 +102,50 @@ func RedirectError(url string) error {
 	).WithMetadata(map[string]string{
 		"Location": url,
 	})
+}
+
+// GetStatics 短链数据统计信息获取
+func (s *PublicService) GetStatics(ctx context.Context, req *pb.GetStaticsRequest) (*pb.GetStaticsReply, error) {
+	//如果是短链数据的获取的话，首先应该是对短链参数是否传递进行校验
+	if req.GetShortCode() == "" {
+		return nil, status.Error(codes.InvalidArgument, "short code is required")
+	}
+	//调用biz层进行业务处理，实际也是查询相关参数，这里简化查询，只对数据进行一个简单的处理，颗粒度暂不考虑
+	statis, err := s.uc.GetStaticsInfo(ctx, req.GetShortCode())
+	if err != nil {
+		return nil, err
+	}
+
+	data := pb.GetStaticsReply_Data{}
+	data.TotalClicks = statis.TotalClicks
+	data.ShortCode = statis.ShortCode
+	data.OriginalUrl = statis.OriginUrl
+	return &pb.GetStaticsReply{
+		Code:    "200",
+		Data:    &data,
+		Message: "success",
+	}, nil
+}
+
+func (s *PublicService) GetAllStatics(ctx context.Context, req *pb.GetAllStaticsRequest) (*pb.GetAllStaticsReply, error) {
+	Allstatis, total_page, totalCount, err := s.uc.GetAllStaticsInfo(ctx, int(req.Page), int(req.Size))
+	if err != nil {
+		return nil, err
+	}
+	data := make([]*pb.GetAllStaticsReply_Data, 0)
+	for _, statis := range Allstatis {
+		data = append(data, &pb.GetAllStaticsReply_Data{
+			ShortCode:   statis.ShortCode,
+			OriginalUrl: statis.OriginUrl,
+			TotalClicks: statis.TotalClicks,
+		})
+	}
+	return &pb.GetAllStaticsReply{
+		Code:       "200",
+		Data:       data,
+		Message:    "success",
+		Total:      int32(totalCount),
+		TotalPages: int32(total_page),
+		Page:       req.GetPage(),
+	}, nil
 }
