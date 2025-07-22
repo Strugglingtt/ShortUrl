@@ -136,7 +136,7 @@ func (uc *ShortUrlUsecase) CreateShortUrl(ctx context.Context, params *ShortUrl)
 	// 4. 构造返回结果
 	return &ShortUrlReply{
 		ShortCode:  shortCode,
-		ShortUrl:   "api/" + shortCode,
+		ShortUrl:   shortCode,
 		LongUrl:    params.LongUrl,
 		CreateTime: now.Format(time.RFC3339),
 		ExpireTime: params.ExpireTime.Format(time.RFC3339),
@@ -181,7 +181,7 @@ func (uc *ShortUrlUsecase) GetOriginalURL(ctx context.Context, code string) (str
 
 		// 4. 数据库找到，写入 Redis 缓存
 		if err := uc.repo.SetCache(ctx, key, shortUrl); // 修正：传入 key 和 shortUrl
-		err != nil {
+			err != nil {
 			uc.log.Warnf("Failed to set cache: %v", err)
 			// 缓存失败不影响主流程
 		}
