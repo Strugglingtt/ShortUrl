@@ -13,7 +13,7 @@ export default {
 
   // 重置所有状态（用于退出登录）
   RESET_STATE(state) {
-    state = Object.assign(state, initialState())
+    Object.assign(state, initialState())
   }
 }
 

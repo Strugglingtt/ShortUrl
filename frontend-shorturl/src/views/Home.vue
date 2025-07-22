@@ -1,17 +1,18 @@
 <template>
   <div class="container">
-    <el-card class="box-card">
-      <h2>短链生成器</h2>
+  <el-card class="box-card">
+      <h2 style="text-align: center; margin-bottom: 30px; font-size: 24px;">短链生成器</h2>
       <el-input 
-        v-model="longUrl" 
-        placeholder="粘贴你的长链接"
-        style="width: 80%; margin-bottom: 20px">
-      </el-input>
+  v-model="longUrl" 
+  placeholder="粘贴你的长链接"
+  style="width: 100%; margin-bottom: 20px">
+</el-input>
       
       <el-button 
         type="primary" 
         @click="generateShortUrl"
-        :loading="loading">
+        :loading="loading"
+        style="width: 100%; height: 44px; font-size: 16px;">
         生成短链
       </el-button>
 
@@ -26,7 +27,7 @@
         </el-input>
         
         <div id="qrcode" style="margin-top: 20px"></div>
-        <p>访问次数: {{ stats.total }}</p>
+        <p>访问次数: {{ stats.totalClicks }}</p>
       </div>
     </el-card>
   </div>
@@ -35,27 +36,37 @@
 <script>
 import QRCode from 'qrcodejs2'
 export default {
-  client() {
+  data() {
     return {
       longUrl: '',
       shortUrl: '',
+      shortCode: '',
       loading: false,
-      stats: { total: 0 }
+      stats: { 
+        shortCode:"",
+        originalUrl:"",
+        totalClicks: 0,
+       }
     }
   },
   computed: {
     fullShortUrl() {
-      return `${window.location.origin}/${this.shortUrl}`
+      console.log(process.env.VUE_APP_BASE_API)
+      const baseUrl = process.env.VUE_APP_BASE_API ;
+      return `${baseUrl}/${this.shortUrl}`;
     }
   },
   methods: {
     async generateShortUrl() {
       this.loading = true
       try {
-        const { client } = await this.$axios.post('/api/shorten', {
-          url: this.longUrl
+        const { data } = await this.$axios.post('/api/shorten', {
+          long_url: this.longUrl,
+          expire_time: '2025-10-01T00:00:00Z',
         })
-        this.shortUrl = client.shortUrl
+        console.log(data)
+        this.shortUrl = data.shortUrl
+        this.shortCode =data.shortCode
         this.generateQRCode()
         this.fetchStats()
       } finally {
@@ -77,8 +88,8 @@ export default {
       this.$message.success('已复制到剪贴板')
     },
     async fetchStats() {
-      const { client } = await this.$axios.get(`/api/stats/${this.shortUrl}`)
-      this.stats = client
+      const { data } = await this.$axios.get(`/api/stats/${this.shortCode}`)
+      this.stats = data
     }
   }
 }
@@ -86,9 +97,20 @@ export default {
 
 <style scoped>
 .container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
+}
+
+.box-card {
+  width: 100%;
+  max-width: 550px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: none !important;
 }
 .result-box {
   margin-top: 30px;

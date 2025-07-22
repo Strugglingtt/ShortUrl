@@ -78,9 +78,14 @@ const actions = {
   }
 }
 
+const getters = {
+  isAuthenticated: state => !!state.token
+}
+
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
+  getters
 }

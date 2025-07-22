@@ -43,7 +43,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'App',
-  client() {
+  data() {
     return {
       loadingText: '加载中...',
       loadingStatus: null
@@ -78,6 +78,8 @@ export default {
     // 菜单选择处理
     handleMenuSelect(index) {
       if (index === 'user-menu') return
+      // 避免重复导航到当前路由
+      if (this.$route.path === index) return
       if (index === '/login') {
         this.$router.push('/login')
       } else {

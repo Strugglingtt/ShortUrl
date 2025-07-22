@@ -21,3 +21,14 @@ export function fetchAllUrls() {
     method: 'get'
   })
 }
+
+export function fetchAllStats(page = 1, size = 10) {
+  return request({
+    url: '/stats/all',
+    method: 'get',
+    params: {
+      page,
+      size
+    }
+  })
+}

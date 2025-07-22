@@ -18,7 +18,7 @@ const actions = {
   // 创建短链
   createShortUrl({ commit }, longUrl) {
     return new Promise((resolve, reject) => {
-      createShortUrl({ url: longUrl })
+      createShortUrl({ long_url: longUrl })
         .then(response => {
           commit('SET_MY_URLS', [...state.myUrls, response.data])
           resolve(response.data)

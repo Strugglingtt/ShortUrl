@@ -12,14 +12,19 @@ export default new Router({
       component: Home
     },
     {
-      path: '/:code',
-      name: 'redirect',
+      path: '/stats',
+      name: 'stats-list',
       component: () => import('../views/Redirect.vue')
     },
     {
       path: '/stats/:code',
       name: 'stats',
       component: () => import('../views/Stats.vue')
+    },
+    {
+      path: '/:code',
+      name: 'redirect',
+      component: () => import('../views/Redirect.vue')
     }
   ]
 })
