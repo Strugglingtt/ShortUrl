@@ -42,6 +42,12 @@ message Data {
     google.protobuf.Duration read_timeout = 3;
     google.protobuf.Duration write_timeout = 4;
   }
+  message MongoDb{
+    string uri =1;
+    string dbname =2;
+    google.protobuf.Duration timeout = 3;
+  }
   Database database = 1;
   Redis redis = 2;
+  MongoDb mongodb =3;
 }

@@ -5,9 +5,15 @@ import (
 	"backend-shorturl/internal/data/ent"
 	"backend-shorturl/internal/data/ent/shorturl"
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/redis/go-redis/v9"
+	"time"
 )
+
+const CachePrefix = "shortUrl:"
 
 type ShortUrlRepo struct {
 	data *Data
@@ -21,12 +27,7 @@ func NewShortUrlRepo(data *Data, logger log.Logger) biz.ShortUrlRepo {
 	}
 }
 
-//
-//CreateShortUrl(ctx context.Context, url *ShortUrl) (string, error)
-//FindByKey(ctx context.Context, key string) (*ShortUrl, error)
-//Exists(ctx context.Context, longURL string) (string, bool)
-
-func (r *ShortUrlRepo) Save(ctx context.Context, su *biz.ShortUrl) (int64, error) {
+func (r *ShortUrlRepo) Save(ctx context.Context, su *biz.ShortUrl) (*biz.ShortUrl, error) {
 	si, err := r.data.client.Shorturl.
 		Create().
 		SetShortCode(su.ShortCode).
@@ -34,13 +35,18 @@ func (r *ShortUrlRepo) Save(ctx context.Context, su *biz.ShortUrl) (int64, error
 		SetExpireAt(su.ExpireTime).
 		Save(ctx)
 	if ent.IsConstraintError(err) {
-		return 666, err
+		return nil, err
 	}
 	if err != nil {
 		log.Errorf("插入短链接失败: %v", err) // 打印错误
-		return 666, nil
+		return nil, nil
 	}
-	return si.ID, nil
+	return &biz.ShortUrl{
+		ShortCode:   si.ShortCode,
+		LongUrl:     si.LongURL,
+		AccessCount: int32(si.AccessCount),
+		ClientIp:    si.CreatorIP,
+	}, nil
 }
 
 func (r *ShortUrlRepo) IsExit(ctx context.Context, url *biz.ShortUrl) (bool, error) {
@@ -59,22 +65,24 @@ func (r *ShortUrlRepo) IsExitByCode(ctx context.Context, code string) (bool, err
 	return Exit, nil
 }
 
-func (r *ShortUrlRepo) GetOriginalURL(ctx context.Context, code string) (string, error) {
+func (r *ShortUrlRepo) GetOriginalURL(ctx context.Context, code string) (*biz.ShortUrl, error) {
 	// 使用Ent客户端查询
 	url, err := r.data.client.Shorturl.
 		Query().                           //开始一个查询构建
 		Where(shorturl.ShortCodeEQ(code)). //添加过滤条件：短码等于传入的code
-		Select(shorturl.FieldLongURL).     //只选择long_url字段返回
 		First(ctx)                         //执行查询并返回第一条结果
 
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return "", errors.New("short code not found")
+			return nil, errors.New("short code not found")
 		}
-		return "", err
+		return nil, err
 	}
 
-	return url.LongURL, nil
+	return &biz.ShortUrl{
+		LongUrl:   url.LongURL,
+		ShortCode: url.ShortCode,
+	}, nil
 }
 
 func (r *ShortUrlRepo) GetShortStaticsInfo(ctx context.Context, code string) (*biz.ShortStaticsInfo, error) {
@@ -131,4 +139,74 @@ func (r *ShortUrlRepo) CalculateTotalPages(totalCount, pageSize int) int {
 		return 1
 	}
 	return (totalCount + pageSize - 1) / pageSize // 向上取整
+}
+
+//redis相关
+
+// SetCache 设置缓存短链信息
+func (r *ShortUrlRepo) SetCache(ctx context.Context, key string, shortUrl *biz.ShortUrl) error {
+	//序列化对象
+	data, err := json.Marshal(shortUrl)
+	if err != nil {
+		r.log.Errorf("Failed to marshal short url: %v", err)
+		return err
+	}
+	//设置缓存,有效期1小时
+	expiration := time.Hour
+	return r.data.redis.Set(ctx, key, data, expiration).Err()
+}
+
+// GetCache 获取短链信息
+func (r *ShortUrlRepo) GetCache(ctx context.Context, key string) (*biz.ShortUrl, error) {
+	value, err := r.data.redis.Get(ctx, key).Result()
+	if err != nil {
+		if errors.Is(err, redis.Nil) {
+			return nil, err //缓存未命中
+		}
+		r.log.Errorf("Failed to get short URL from cache: %v", err)
+		return nil, err
+	}
+	var shortUrl biz.ShortUrl
+	if err := json.Unmarshal([]byte(value), &shortUrl); err != nil {
+		r.log.Errorf("Failed to unmarshal short URL: %v", err)
+		return nil, err
+	}
+	return &shortUrl, nil
+}
+
+// AddCache 用于缓存添加数据
+func (r *ShortUrlRepo) AddCache(ctx context.Context, key string) error {
+	shortUrlInfo, err := r.GetCache(ctx, key)
+	if err != nil {
+		return err
+	}
+	shortUrlInfo.AccessCount++
+	data, err := json.Marshal(shortUrlInfo)
+	expiration := time.Hour
+	return r.data.redis.Set(ctx, key, data, expiration).Err()
+}
+
+// SetEmptyCache 设置空值缓存（防止缓存穿透）
+func (r *ShortUrlRepo) SetEmptyCache(ctx context.Context, key string) error {
+	return r.data.redis.Set(ctx, key, "null", 10*time.Minute).Err()
+}
+
+// IncrementAccessCount 增加访问计数
+func (r *ShortUrlRepo) IncrementAccessCount(ctx context.Context, shortCode string) error {
+	// 1. 更新 Redis 计数
+	key := CachePrefix + shortCode
+	fmt.Println("key:", key)
+	shortUrlInfo, err := r.GetCache(ctx, key)
+	if err != nil {
+		return err
+	}
+	shortUrlInfo.AccessCount++
+	//序列化
+	data, _ := json.Marshal(shortUrlInfo)
+	expiration := time.Hour
+	return r.data.redis.Set(ctx, key, data, expiration).Err()
+
+	// 2. 异步持久化到数据库（使用 NSQ 或其他消息队列）
+	// ... Tomorrow TODO
+
 }

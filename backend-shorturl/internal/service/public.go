@@ -3,6 +3,7 @@ package service
 import (
 	"backend-shorturl/internal/biz"
 	"context"
+	"fmt"
 	"github.com/go-kratos/kratos/v2/errors"
 
 	"github.com/go-kratos/kratos/v2/transport"
@@ -68,12 +69,13 @@ func (s *PublicService) Redirect(ctx context.Context, req *pb.RedirectRequest) (
 	if req.Code == "" {
 		return nil, errors.BadRequest("REDIRECT", "code is required")
 	}
-
+	//获取原长连接
+	fmt.Println("req.Code:", req.Code)
 	url, err := s.uc.GetOriginalURL(ctx, req.Code)
 	if err != nil {
+		log.Info("长连接获取失败")
 		return nil, err
 	}
-
 	//实际这里还要增加短链的数据，对短链的一个点击详情进行统计
 
 	// 获取HTTP传输器 进行一个重定向跳转
@@ -96,7 +98,7 @@ func (s *PublicService) Redirect(ctx context.Context, req *pb.RedirectRequest) (
 }
 func RedirectError(url string) error {
 	return errors.New(
-		302,
+		302, //302和308   == 308是永久重定向，浏览器会缓存
 		"REDIRECT",
 		"Resource has moved",
 	).WithMetadata(map[string]string{

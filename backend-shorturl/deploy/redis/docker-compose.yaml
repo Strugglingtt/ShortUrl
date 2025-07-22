@@ -1,0 +1,8 @@
+services:
+  redis: #服务名称
+    image: redis:latest
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - "./data:/data"

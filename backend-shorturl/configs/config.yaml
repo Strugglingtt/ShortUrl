@@ -17,3 +17,13 @@ data:
     addr: 127.0.0.1:6379
     read_timeout: 0.2s
     write_timeout: 0.2s
+  mongodb:
+    uri: mongodb://127.0.0.1:27017  # MongoDB连接URI
+    dbname: shorturl             # 数据库名称
+    timeout: 30s                    # 连接超时时间
+nsq:
+  lookupd_addresses: ["127.0.0.1:4161"]  # NSQ Lookupd 地址
+  nsqd_address: "127.0.0.1:4150"         # NSQD 地址
+  topic: "shorturl_access"                # 主题名称
+  channel: "db_worker"                    # 通道名称
+  concurrency: 5                          # 并发消费者数量
